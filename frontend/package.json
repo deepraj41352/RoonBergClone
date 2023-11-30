@@ -25,7 +25,6 @@
     "fs": "^0.0.1-security",
     "fs-path": "^0.0.25",
     "html2canvas": "^1.4.1",
-    "mui-rte": "^2.0.1",
     "multiselect-react-dropdown": "^2.0.25",
     "path": "^0.12.7",
     "react": "^18.2.0",

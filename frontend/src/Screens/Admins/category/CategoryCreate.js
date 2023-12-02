@@ -1,18 +1,19 @@
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Store } from '../../../Store';
 import { Button } from 'react-bootstrap';
 import { MenuItem, Select } from '@mui/material';
 import FormSubmitLoader from '../../../Util/formSubmitLoader';
-import Validations from '../../../Components/Validations';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import AvatarImage from '../../../Components/Avatar';
 
 export default function CategoryCreate() {
   const navigate = useNavigate();
   const { state } = useContext(Store);
   const { userInfo } = state;
   const [submiting, setsubmiting] = useState(false);
+  const [color, setColor] = useState('');
   const [user, setUser] = useState({
     image_url: '',
     name: '',
@@ -90,6 +91,24 @@ export default function CategoryCreate() {
     }
   };
 
+  useEffect(() => {
+    function generateColorFromAscii(str) {
+      let color = '#';
+      const combination = str
+        .split('')
+        .map((char) => char.charCodeAt(0))
+        .reduce((acc, value) => acc + value, 0);
+      color += (combination * 12345).toString(16).slice(0, 6);
+      return color;
+    }
+
+    if (user && user.name) {
+      const name = user.name.toLowerCase().charAt(0);
+      const generatedColor = generateColorFromAscii(name);
+      setColor(generatedColor);
+    }
+  }, [user.name]);
+
   return (
     <>
       <ul className="nav-style1">
@@ -127,6 +146,14 @@ export default function CategoryCreate() {
                     alt="image"
                     className="img-thumbnail creatForm me-2"
                   />
+                ) : user.name ? (
+                  <div className="avtarImage">
+                    <AvatarImage
+                      id="cateEditImgAvatar creatForm"
+                      name={user.name}
+                      bgColor={color}
+                    />
+                  </div>
                 ) : (
                   <img
                     src="https://res.cloudinary.com/dmhxjhsrl/image/upload/v1698911473/r5jajgkngwnzr6hzj7vn.jpg"

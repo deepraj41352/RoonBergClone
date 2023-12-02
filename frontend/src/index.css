@@ -568,10 +568,6 @@ body {
     rgba(0, 0, 0, 1) 93%
   );
 }
-.admin-btn-logo {
-  color: white;
-}
-
 .search-bar-dash {
   width: 350px !important;
 }
@@ -694,18 +690,9 @@ body {
   padding: 0px;
   margin: 0px;
 }
-
-.blank-box {
-  height: 62px;
-  width: 100%;
-  background-color: #060612;
-}
 .text-decoration-none {
   text-decoration: none;
   color: white;
-}
-.text-decoration-none :hover {
-  background-color: #c45bf157;
 }
 .eye-bttn {
   position: absolute;
@@ -761,12 +748,7 @@ body {
   text-decoration: none;
   color: white;
 }
-.text-decoration-none :hover {
-  background-color: #0f2855;
-}
-.text-decoration-none :checked {
-  background-color: #0f2855;
-}
+
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
   background-color: #fff !important;
   padding: 3px;
@@ -1758,19 +1740,6 @@ body {
   flex-direction: column;
 }
 
-.footer {
-  margin-top: auto;
-  background: linear-gradient(
-    1deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(17, 17, 74, 1) 68%,
-    rgba(0, 0, 0, 1) 93%
-  );
-  text-align: center;
-  padding: 10px;
-  font-size: 14px;
-  color: #fff; /* Adjust the font size as needed */
-}
 .buttonsTop {
   display: flex;
   justify-content: space-between;
@@ -1833,9 +1802,13 @@ body {
 }
 .dropMenuProfile {
   position: absolute;
-  top: 82% !important;
-  left: -87px !important;
+  top: 87% !important;
+  right: 0; /* Set right to 0 to grow from the left */
+  transform: translateX(-80%); /* Move the menu to the left by its own width */
   margin-top: var(--bs-dropdown-spacer);
+  width: fit-content;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0;
+  border: none !important;
 }
 .profilebtnColor {
   background: transparent !important;
@@ -2095,6 +2068,12 @@ body {
   max-width: 100% !important;
   height: auto !important;
 }
+.avtarImage > div {
+  width: 100px !important;
+  font-size: 40px !important;
+  max-width: 100% !important;
+  height: 100px !important;
+}
 
 .form-group {
   margin-bottom: 20px;
@@ -2154,4 +2133,93 @@ body {
 .css-t89xny-MuiDataGrid-columnHeaderTitle {
   font-weight: 700 !important;
 }
+
+/* projectTable */
+.projectTable {
+  border-style: unset !important;
+}
+/* projectTable */
+
 /* ............} */
+
+/* {Sidebar ...................... */
+.darksidebar-theme {
+  background-color: #070719;
+  color: #fff;
+}
+.lightsidebar-theme {
+  background-color: #f7f9fa;
+  color: black;
+}
+.light-text-decoration-none {
+  text-decoration: none;
+  color: black;
+}
+.dark-text-decoration-none {
+  text-decoration: none;
+  color: white;
+}
+.light-blank-box {
+  height: 66px;
+  width: 100%;
+}
+.dark-blank-box {
+  height: 66px;
+  width: 100%;
+}
+/* ...................... }*/
+
+/* {Navebar..................... */
+.light-admin-navbar {
+  height: 66px !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 3;
+  background-color: #fff;
+  box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.05);
+}
+.dark-admin-navbar {
+  height: 66px !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 3;
+  border-bottom: 1px solid #22455c;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    1deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(17, 17, 74, 1) 68%,
+    rgba(0, 0, 0, 1) 93%
+  );
+}
+/* ...................... }*/
+
+/* {Footetr..................... */
+.light-footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: black;
+  box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.05);
+}
+.dark-footer {
+  margin-top: auto;
+  background: linear-gradient(
+    1deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(17, 17, 74, 1) 68%,
+    rgba(0, 0, 0, 1) 93%
+  );
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #fff;
+}
+.dark-navbar-Btn {
+  color: white;
+}
+.light-navbar-Btn {
+  color: black;
+}
+/* ...................... }*/

@@ -13,30 +13,22 @@ import 'react-toastify/dist/ReactToastify.css';
 import SignUpForm from './Screens/SignInScreen';
 import RegistrationForm from './Screens/RegistrationScreen';
 import AdminProjectListScreen from './Screens/AdminProjectListScreen';
-import AdminAgentListScreen from './Screens/AdminAgentListScreen';
-import AdminCategoriesListScreen from './Screens/AdminCategoriesListScreen';
-import AdminContractorListScreen from './Screens/AdminContractorListScreen';
 import SearchScreen from './Screens/SearchScreen';
 import ProjectSingleScreen from './Screens/ProjectSingleScreen';
 import ChatWindowScreen from './Screens/ChatWindowScreen';
-import AdminEditAgent from './Screens/AdminEditAgentScreen';
 import { useContext, useState, useEffect } from 'react';
-import {
-  Container,
-  Form,
-  Image,
-  InputGroup,
-  Nav,
-  Dropdown,
-  Navbar,
-} from 'react-bootstrap';
+import { Container, Image, Nav, Dropdown, Navbar } from 'react-bootstrap';
 import Sidebar from './Components/Sidebar';
-import { AiOutlineAlignLeft, AiOutlineCheck } from 'react-icons/ai';
+import {
+  AiOutlineAlignLeft,
+  AiOutlineCheck,
+  AiOutlineHome,
+} from 'react-icons/ai';
 import { BsFillPersonFill, BsSearch } from 'react-icons/bs';
 import { BiShareAlt } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { FiClock } from 'react-icons/fi';
-import { MdOutlineNotifications } from 'react-icons/md';
+import { MdLogout, MdOutlineNotifications } from 'react-icons/md';
 import axios from 'axios';
 import { Store } from './Store';
 import AdminDashboard from './Screens/AdminDashboard';
@@ -45,20 +37,12 @@ import ProfileScreen from './Screens/ProfileScreen';
 import Theme from './Components/Theme';
 import ProjectNotification from './Screens/ProjectNotification';
 import AddProject from './Screens/AddProject';
-import ChatScreen from './Screens/ChatScreen';
-import AdminEditCategory from './Screens/AdminEditCategoryScreen';
 import AdminEditProject from './Screens/AdminEditProjectScreen';
-import AdminEditContractor from './Screens/AdminEditContractorScreen';
 import ContractorProject from './Contractor/ContractorProjectListScreen';
 import ContractorEditProject from './Contractor/ContractorEditProjectScreen';
 import AgentProjectList from './Agent/AgentProjectListScreen';
-import AdminAssignAgent from './Screens/AdminAssignAgentScreen';
 import AgentEditProject from './Agent/AgentEditProjectScreen';
-// import ContractorProjectScreen from './Components/Contractor/contractorProjectScreen';
-import SuperadminEditAdmin from './Screens/SuperadminEditAdmin';
 import NotificationScreen from './Screens/NotificationScreen';
-import AdminListScreen from './Screens/AdminListScreen';
-import SuperadminAdminList from './Screens/SuperadminAdminList2';
 import MyComponent from './Components/MyComponent';
 import Footer from './Components/footer';
 import ConfirmRegistration from './Screens/ConfirmRegistration';
@@ -80,15 +64,25 @@ import ContractorUpdate from './Screens/Admins/contractor/ContractorUpdate';
 import CategoryCreate from './Screens/Admins/category/CategoryCreate';
 import CategoryList from './Screens/Admins/category/CategoryList';
 import CategoryUpdate from './Screens/Admins/category/CategoryUpdate';
+import { IoPersonOutline } from 'react-icons/io5';
+import { IoMdNotificationsOutline } from 'react-icons/io';
+import { VscColorMode } from 'react-icons/vsc';
 
 function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [pathName, setPathName] = useState();
-
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { toggleState, userInfo, NotificationData } = state;
   const theme = toggleState ? 'dark' : 'light';
+  const [isToggled, setIsToggled] = useState(toggleState);
+  const handleChangeToggleState = () => {
+    setIsToggled(!isToggled);
+  };
+  useEffect(() => {
+    ctxDispatch({ type: 'TOGGLE_BTN', payload: isToggled });
+    localStorage.setItem('toggleState', JSON.stringify(isToggled));
+  }, [isToggled]);
   const [searchValue, setSearchValue] = useState('');
   const [user, setuser] = useState(true);
   const navigate = useNavigate();
@@ -124,6 +118,14 @@ function App() {
     const pathname = window.location.pathname;
     setPathName(pathname);
   }, []);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleMouseOver = () => {
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div className={userInfo ? `App ${theme}` : `App`}>
@@ -141,10 +143,10 @@ function App() {
 
             <div className={`px-0  w-100`}>
               {userInfo ? (
-                <Navbar expand="lg" className="admin-navbar">
+                <Navbar expand="lg" className={`${theme}-admin-navbar`}>
                   <Container fluid>
                     <div
-                      className="p-2 me-3 fs-5 admin-btn-logo"
+                      className={`p-2 me-3 fs-5 admin-btn-logo ${theme}-navbar-Btn`}
                       onClick={toggleSidebar}
                     >
                       <AiOutlineAlignLeft />
@@ -173,7 +175,7 @@ function App() {
                           className="position-relative"
                         >
                           <MdOutlineNotifications
-                            className="fs-4 admin-btn-logo"
+                            className={`fs-4 admin-btn-logo ${theme}-navbar-Btn`}
                             title="Notifications"
                           />
                           {NotificationData.length > 0 && (
@@ -182,7 +184,12 @@ function App() {
                             </span>
                           )}
                         </Link>
-                        <Dropdown className="mb-0 tab-btn text-start smallDeviceProfile">
+                        <Dropdown
+                          className="mb-0 tab-btn text-start smallDeviceProfile"
+                          show={isOpen}
+                          onMouseOver={handleMouseOver}
+                          onMouseLeave={handleMouseLeave}
+                        >
                           <Dropdown.Toggle
                             id="dropdown-tabs"
                             className="my-2 profilebtnColor profileToggleBtn selectButton"
@@ -197,22 +204,70 @@ function App() {
                               alt="userimg"
                             />
                           </Dropdown.Toggle>
-                          <Dropdown.Menu className="dropMenu dropMenuProfile">
-                            <Dropdown.Item href="/profile-screen">
-                              Profile
+                          <Dropdown.Menu
+                            className="dropMenu dropMenuProfile drophover"
+                            style={{
+                              transition:
+                                'opacity 0.3s ease, transform 0.3s ease',
+                            }}
+                          >
+                            <Dropdown.Item>
+                              <div className="d-flex gap-3 w-100">
+                                <div>
+                                  <div>
+                                    {' '}
+                                    <img
+                                      className="profile-icon-inner Nav-image img-fornavs"
+                                      src={
+                                        userInfo.profile_picture
+                                          ? userInfo.profile_picture
+                                          : './avatar.png'
+                                      }
+                                      alt="userimg"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="d-flex flex-column">
+                                  <div>{userInfo.first_name}</div>
+                                  <div>{userInfo.email}</div>
+                                </div>
+                              </div>
                             </Dropdown.Item>
-                            <Dropdown.Item href="/notificationScreen">
+                            <hr />
+                            <Dropdown.Item
+                              href="/profile-screen"
+                              className="mb-2"
+                            >
+                              <IoPersonOutline className="fs-4 me-3 pb-1" />
+                              My Profile
+                            </Dropdown.Item>
+                            <Dropdown.Item href=" /dashboard" className="mb-2">
+                              <AiOutlineHome className="fs-4 me-3 pb-1" />
+                              Dashboard
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              href="/notificationScreen"
+                              className="mb-2"
+                            >
+                              <IoMdNotificationsOutline className="fs-4 me-3 pb-1 " />
                               Notification
                             </Dropdown.Item>
+                            <Dropdown.Item onClick={handleChangeToggleState}>
+                              <VscColorMode className="fs-4 me-3 pb-1 " />
+                              {theme === 'light' ? 'Dark' : 'Light'} Mode
+                            </Dropdown.Item>
+                            <hr />
                             <Dropdown.Item onClick={signoutHandler}>
+                              <MdLogout className="fs-4 me-3 pb-1" />
                               Logout
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
+                        {/* <ProfileDropdown /> */}
                       </Nav>
                     </Navbar.Collapse>
                     <div
-                      className="p-2 me-3 fs-5 admin-btn-logo2"
+                      className={`p-2 me-3 fs-5 admin-btn-logo2 ${theme}-navbar-Btn`}
                       onClick={toggleSidebar}
                     >
                       <AiOutlineAlignLeft />
@@ -406,14 +461,7 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
-                      path="/adminAgentList/"
-                      element={
-                        <ProtectedRoute>
-                          <AdminAgentListScreen />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     <Route
                       path="/profile-screen"
                       element={
@@ -422,14 +470,7 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
-                      path="/adminCategoriesList"
-                      element={
-                        <ProtectedRoute>
-                          <AdminCategoriesListScreen />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     <Route
                       path="/taskScreen-agent"
                       element={
@@ -438,22 +479,7 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
-                      path="/adminList-screen"
-                      element={
-                        <ProtectedRoute>
-                          <SuperadminAdminList />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/adminContractorList"
-                      element={
-                        <ProtectedRoute>
-                          <AdminContractorListScreen />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     <Route
                       path="/searchScreen"
                       element={<SearchScreen searchFor={searchValue} />}
@@ -482,46 +508,7 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
-                      path="/adminEditCategory/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AdminEditCategory />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/adminEditAgent/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AdminEditAgent />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/adminEditContractor/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AdminEditContractor />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/superadmineditadmin/:id"
-                      element={
-                        <ProtectedRoute>
-                          <SuperadminEditAdmin />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/AdminAssignAgent/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AdminAssignAgent />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     {/* Contractor */}
                     <Route
                       path="/project-list-screen"

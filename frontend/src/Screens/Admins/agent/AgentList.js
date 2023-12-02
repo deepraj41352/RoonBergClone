@@ -13,7 +13,7 @@ import ThreeLoader from '../../../Util/threeLoader';
 const columns = [
   {
     field: 'first_name',
-    headerName: 'Admin Name',
+    headerName: 'Name',
     width: 200,
   },
   {
@@ -113,22 +113,20 @@ export default function AgentList() {
 
   const deleteHandle = async (userid) => {
     setIsDeleting(true);
-    if (window.confirm('Are You Sure To Delete?')) {
-      try {
-        const response = await axios.delete(`/api/user/${userid}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+    try {
+      const response = await axios.delete(`/api/user/${userid}`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
 
-        if (response.status === 200) {
-          toast.success('Admin Deleted Successfully!');
-        } else {
-          toast.error('Failed To Delete Admin.');
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('An Error Occurred While Deleting Admin.');
+      if (response.status === 200) {
+        toast.success('Agent Deleted Successfully!');
+      } else {
+        toast.error('Failed To Delete Admin.');
       }
-    } else {
+    } catch (error) {
+      console.error(error);
+      toast.error('An Error Occurred While Deleting Admin.');
+    } finally {
       setIsDeleting(false);
     }
   };
@@ -137,9 +135,7 @@ export default function AgentList() {
     <>
       {loading ? (
         <>
-          <div className="ThreeDot">
-            <ThreeLoader />
-          </div>
+          <ThreeLoader />
         </>
       ) : error ? (
         <div>{error}</div>
@@ -157,12 +153,8 @@ export default function AgentList() {
               </Link>
             </li>
           </ul>
+          {isDeleting && <FormSubmitLoader />}
           <div className="overlayLoading">
-            {isDeleting && (
-              <div className="overlayLoadingItem1">
-                <FormSubmitLoader />
-              </div>
-            )}
             <Box sx={{ width: '100%', height: '400px' }}>
               <DataGrid
                 className={

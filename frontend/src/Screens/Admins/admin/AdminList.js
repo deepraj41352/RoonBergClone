@@ -13,7 +13,7 @@ import { confirmAlert } from 'react-confirm-alert';
 const columns = [
   {
     field: 'first_name',
-    headerName: 'Admin Name',
+    headerName: 'Name',
     width: 200,
   },
   {
@@ -90,7 +90,6 @@ export default function AdminList() {
       const response = await axios.delete(`/api/user/${userid}`, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       });
-
       if (response.status === 200) {
         toast.success('Admin Deleted Successfully!');
       } else {
@@ -99,6 +98,8 @@ export default function AdminList() {
     } catch (error) {
       console.error(error);
       toast.error('An Error Occurred While Deleting Admin.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -106,9 +107,7 @@ export default function AdminList() {
     <>
       {loading ? (
         <>
-          <div className="ThreeDot">
-            <ThreeLoader />
-          </div>
+          <ThreeLoader />
         </>
       ) : error ? (
         <div>{error}</div>
@@ -126,12 +125,9 @@ export default function AdminList() {
               </Link>
             </li>
           </ul>
+          {isDeleting && <FormSubmitLoader />}
+
           <div className="overlayLoading">
-            {isDeleting && (
-              <div className="overlayLoadingItem1">
-                <FormSubmitLoader />
-              </div>
-            )}
             <Box sx={{ width: '100%', height: '400px' }}>
               <DataGrid
                 className={

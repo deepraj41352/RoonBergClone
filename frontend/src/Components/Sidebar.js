@@ -4,6 +4,7 @@ import { HiClipboardList, HiUserGroup } from 'react-icons/hi';
 import { CiBoxList } from 'react-icons/ci';
 import { FaListAlt, FaListUl } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 import { IoMdNotifications } from 'react-icons/io';
 import { AiFillHome, AiOutlineProject } from 'react-icons/ai';
@@ -21,10 +22,12 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo, NotificationData } = state;
   const [unseeNote, setUnseenNote] = useState(NotificationData);
-  const [selectedItem, setSelectedItem] = useState(null);
+
   const [isSmallScreen, setIsSmallScreen] = useState(true);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+  const { toggleState } = state;
+  const theme = toggleState ? 'dark' : 'light';
 
   const socketUrl = process.env.REACT_APP_SOCKETURL;
   const socket = io(socketUrl); // Replace with your server URL
@@ -138,67 +141,91 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
   };
 
   return (
-    <div className={`sidebar ${!sidebarVisible ? '' : 'visible'} `}>
-      <div className="blank-box"></div>
+    <div
+      className={`sidebar ${theme}sidebar-theme ${
+        !sidebarVisible ? '' : 'visible'
+      } `}
+    >
+      <div className={`${theme}-blank-box`}></div>
       <ImCross
         className="sidebarCrossBtn"
         onClick={handleResponsiveSidebarVisable}
       />
       <ul className="dash-list">
-        <Link
-          to="/dashboard"
-          className="text-decoration-none"
-          onClick={handlSmallScreeneClick}
+        <motion.li
+          whileHover={{
+            scale: 1.05,
+          }}
+          whileTap={{ scale: 0.9 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 10,
+          }}
         >
-          <li
-            className={selectedItem === 'dashboard' ? 'selected' : ''}
-            onClick={() => {
-              setSelectedItem('dashboard');
-            }}
-          >
-            <AiFillHome className="me-3 fs-5" />
-            Dashboard
-          </li>
-        </Link>
-
-        {userInfo.role == 'superadmin' ? (
           <Link
-            to="/admin"
-            className="text-decoration-none"
+            to="/dashboard"
+            className={`${theme}-text-decoration-none`}
             onClick={handlSmallScreeneClick}
           >
-            <li
-              className={selectedItem === 'adminList' ? 'selected' : ''}
-              onClick={() => {
-                setSelectedItem('adminList');
-              }}
-            >
-              <MdOutlineGroups2 className="me-3 fs-5" />
-              Admin
+            <li>
+              <AiFillHome className="me-3 fs-5" />
+              Dashboard
             </li>
           </Link>
+        </motion.li>
+        {userInfo.role == 'superadmin' ? (
+          <motion.li
+            whileHover={{
+              scale: 1.05,
+            }}
+            whileTap={{ scale: 0.9 }}
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 10,
+            }}
+          >
+            <Link
+              to="/admin"
+              className={`${theme}-text-decoration-none`}
+              onClick={handlSmallScreeneClick}
+            >
+              <li>
+                <MdOutlineGroups2 className="me-3 fs-5" />
+                Admin
+              </li>
+            </Link>
+          </motion.li>
         ) : null}
 
         {userInfo.role === 'admin' || userInfo.role === 'superadmin' ? (
           <>
-            <Link
-              to="/agent"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li
-                className={selectedItem === 'agentList' ? 'selected' : ''}
-                onClick={() => {
-                  setSelectedItem('agentList');
-                }}
+              <Link
+                to="/agent"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
               >
-                <HiUserGroup className="me-3 fs-5" />
-                Agent
-              </li>
-            </Link>
-            <Link
-              to="/contractor"
-              className="text-decoration-none"
+                <li>
+                  <HiUserGroup className="me-3 fs-5" />
+                  Agent
+                </li>
+              </Link>
+            </motion.li>
+            {/* <Link
+              to="/adminContractorList"
+              className={`${theme}-text-decoration-none`}
               onClick={handlSmallScreeneClick}
             >
               <li
@@ -208,74 +235,127 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
                 }}
               >
                 <MdGroup className="me-3 fs-5" />
-                Client
+                Contractor
               </li>
-            </Link>
-            <Link
-              to="/category"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+            </Link> */}
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li
-                className={selectedItem === 'categoriesList' ? 'selected' : ''}
-                onClick={() => {
-                  setSelectedItem('categoriesList');
-                }}
+              <Link
+                to="/contractor"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
               >
-                <FaListUl className="me-3 fs-5" />
-                Categories
-              </li>
-            </Link>
-            <Link
-              to="/adminProjectList"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+                <li>
+                  <MdGroup className="me-3 fs-5" />
+                  Client
+                </li>
+              </Link>
+            </motion.li>
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li
-                className={
-                  selectedItem === 'ProjectListAdmin' ? 'selected' : ''
-                }
-                onClick={() => {
-                  setSelectedItem('ProjectListAdmin');
-                }}
+              <Link
+                to="/category"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
               >
-                <AiOutlineProject className="me-3 fs-5" />
-                Project
-              </li>
-            </Link>
-            <Link
-              to="/tasksScreen"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+                <li>
+                  <FaListUl className="me-3 fs-5" />
+                  Categories
+                </li>
+              </Link>
+            </motion.li>
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li>
-                <BiTask className="me-3 fs-5" />
-                Task
-              </li>
-            </Link>
+              <Link
+                to="/adminProjectList"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
+              >
+                <li>
+                  <AiOutlineProject className="me-3 fs-5" />
+                  Project
+                </li>
+              </Link>
+            </motion.li>
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
+            >
+              <Link
+                to="/tasksScreen"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
+              >
+                <li>
+                  <BiTask className="me-3 fs-5" />
+                  Task
+                </li>
+              </Link>
+            </motion.li>
           </>
         ) : null}
 
         {userInfo.role == 'contractor' ? (
           <>
-            <Link
-              to="/project-list-screen"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li
-                className={selectedItem === 'addProjects' ? 'selected' : ''}
-                onClick={() => {
-                  setSelectedItem('addProjects');
-                }}
+              <Link
+                to="/project-list-screen"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
               >
-                <AiOutlineProject className="me-3 fs-5" />
-                Project
-              </li>
-            </Link>
+                <li>
+                  <AiOutlineProject className="me-3 fs-5" />
+                  Project
+                </li>
+              </Link>
+            </motion.li>
             {/* <Link
               to="/add-project"
-              className="text-decoration-none"
+              className={`${theme}-text-decoration-none`}
               onClick={handlSmallScreeneClick}
             >
               <li
@@ -288,108 +368,162 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
                 Add Project
               </li>
             </Link> */}
-            <Link
-              to="/contractor-tasksScreen"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li>
-                <BiTask className="me-3 fs-5" />
-                Task
-              </li>
-            </Link>
+              <Link
+                to="/contractor-tasksScreen"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
+              >
+                <li>
+                  <BiTask className="me-3 fs-5" />
+                  Task
+                </li>
+              </Link>
+            </motion.li>
           </>
         ) : null}
 
         {userInfo.role == 'agent' ? (
           <>
-            <Link
-              to="/agentProjectList"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li>
-                <AiOutlineProject className="me-3 fs-5" />
-                Project
-              </li>
-            </Link>
-            <Link
-              to="/taskScreen-agent"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
+              <Link
+                to="/agentProjectList"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
+              >
+                <li>
+                  <AiOutlineProject className="me-3 fs-5" />
+                  Project
+                </li>
+              </Link>
+            </motion.li>
+            <motion.li
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 10,
+              }}
             >
-              <li>
-                <BiTask className="me-3 fs-5" />
-                Task
-              </li>
-            </Link>
+              <Link
+                to="/taskScreen-agent"
+                className={`${theme}-text-decoration-none`}
+                onClick={handlSmallScreeneClick}
+              >
+                <li>
+                  <BiTask className="me-3 fs-5" />
+                  Task
+                </li>
+              </Link>
+            </motion.li>
           </>
         ) : null}
-
-        <Link
-          to="/notificationScreen"
-          className="text-decoration-none"
-          onClick={handlSmallScreeneClick}
+        <motion.li
+          whileHover={{
+            scale: 1.05,
+          }}
+          whileTap={{ scale: 0.9 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 10,
+          }}
         >
-          <li
-            className={
-              selectedItem === 'notificationScreen'
-                ? 'selected d-flex'
-                : 'd-flex'
-            }
-            onClick={() => {
-              setSelectedItem('notificationScreen');
-            }}
+          <Link
+            to="/notificationScreen"
+            className={`${theme}-text-decoration-none`}
+            onClick={handlSmallScreeneClick}
           >
-            <IoMdNotifications className="me-3 fs-5 " />
-            <div className="position-relative">
-              Notification
-              {uniqueNotificationData.length > 0 && (
-                <span className="position-absolute notification-badge top-0 start-110 translate-middle badge rounded-pill bg-danger">
-                  {uniqueNotificationData.length}
-                </span>
-              )}
-            </div>
-          </li>
-        </Link>
+            <li className="d-flex">
+              <IoMdNotifications className="me-3 fs-5 " />
+              <div className="position-relative">
+                Notification
+                {uniqueNotificationData.length > 0 && (
+                  <span className="position-absolute notification-badge top-0 start-110 translate-middle badge rounded-pill bg-danger">
+                    {uniqueNotificationData.length}
+                  </span>
+                )}
+              </div>
+            </li>
+          </Link>
+        </motion.li>
+
         <Link
           to="/profile-screen"
           className="text-decoration-none disNonePro"
           onClick={handlSmallScreeneClick}
         >
-          <li
-            className={selectedItem === 'categoriesList' ? 'selected' : ''}
-            onClick={() => {
-              setSelectedItem('categoriesList');
+          <motion.li
+            whileHover={{
+              scale: 1.05,
+            }}
+            whileTap={{ scale: 0.9 }}
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 10,
             }}
           >
-            <img
-              className="profile-icon2 profile-icon-inner fs-5 img-fornavs"
-              src={
-                userInfo.profile_picture
-                  ? userInfo.profile_picture
-                  : './avatar.png'
-              }
-              alt="userimg"
-            />
-            Profile
-          </li>
+            <li>
+              <img
+                className="profile-icon2 profile-icon-inner fs-5 img-fornavs"
+                src={
+                  userInfo.profile_picture
+                    ? userInfo.profile_picture
+                    : './avatar.png'
+                }
+                alt="userimg"
+              />
+              Profile
+            </li>
+          </motion.li>
         </Link>
-        <Link
-          to="#Logout"
-          onClick={signoutHandler}
-          className="text-decoration-none"
+
+        <motion.li
+          whileHover={{
+            scale: 1.05,
+          }}
+          whileTap={{ scale: 0.9 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 10,
+          }}
         >
-          <li
-            className={selectedItem === 'logout' ? 'selected' : ''}
-            onClick={() => {
-              setSelectedItem('logout');
-            }}
+          <Link
+            to="#Logout"
+            onClick={signoutHandler}
+            className={`${theme}-text-decoration-none`}
           >
-            <MdLogout className="me-3 fs-5" />
-            Logout
-          </li>
-        </Link>
+            <li>
+              <MdLogout className="me-3 fs-5" />
+              Logout
+            </li>
+          </Link>
+        </motion.li>
       </ul>
     </div>
   );

@@ -4,12 +4,13 @@ import { Store } from '../../../Store';
 import { Button } from 'react-bootstrap';
 import { MenuItem, Select } from '@mui/material';
 import FormSubmitLoader from '../../../Util/formSubmitLoader';
-import Validations from '../../../Components/Validations';
 import { toast } from 'react-toastify';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ThreeLoader from '../../../Util/threeLoader';
+import AvatarImage from '../../../Components/Avatar';
 
 export default function CategoryUpdate() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { state } = useContext(Store);
   const { userInfo } = state;
@@ -17,66 +18,114 @@ export default function CategoryUpdate() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+    image_url: '',
+    name: '',
+    description: '',
     status: true,
-    role: 'admin',
   });
+  const [color, setColor] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === 'image_url') {
+      const image_url = files[0].size / 1024 / 1024;
+      if (image_url > 2) {
+        toast.error(
+          'The photo size greater than 2 MB. Make sure less than 2 MB.',
+          {
+            style: {
+              border: '1px solid #ff0033',
+              padding: '16px',
+              color: '#ff0033',
+            },
+            iconTheme: {
+              primary: '#ff0033',
+              secondary: '#FFFAEE',
+            },
+          }
+        );
+        e.target.value = null;
+        return;
+      }
+      setUser((prevState) => ({
+        ...prevState,
+        image_url: files[0],
+      }));
+      setImagePreview(window.URL.createObjectURL(files[0]));
+    } else {
+      setUser((prevState) => ({ ...prevState, [name]: value }));
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const FatchcategoryData = async () => {
       setIsLoading(true);
       try {
-        const { data } = await axios.get(`/api/user/${id}`);
+        const { data } = await axios.get(`/api/category/${id}`);
         setUser({
-          firstName: data.first_name,
-          lastName: data.last_name,
-          email: data.email,
-          status: data.userStatus,
-          role: 'contractor',
+          name: data.categoryName,
+          description: data.categoryDescription,
+          status: data.categoryStatus,
+          image_url: data.categoryImage,
         });
       } catch (error) {
-        setError(error.response?.data?.message || 'An error occurred');
+        toast.error(error.response?.data?.message);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchUserData();
-  }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
+    FatchcategoryData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setsubmiting(true);
-    const submitData = {
-      first_name: user.firstName,
-      last_name: user.lastName,
-      email: user.email,
-      role: user.role,
-      userStatus: user.status,
-    };
-    console.log('submitData', submitData);
+
+    const formDatas = new FormData();
+    formDatas.append('file', user.image_url);
+    formDatas.append('categoryName', user.name);
+    formDatas.append('categoryDescription', user.description);
+    formDatas.append('categoryStatus', user.status);
     try {
-      const response = await axios.put(`/api/user/update/${id}`, submitData, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      });
-      if (response.status === 200) {
-        toast.success('Admin Updated Successfully !');
-      }
-    } catch (error) {
-      toast.error(error.data?.message);
+      const data = await axios.put(
+        `/api/category/CategoryUpdate/${id}`,
+        formDatas,
+        {
+          headers: {
+            'content-type': 'multipart/form-data',
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      toast.success('Category Updated Successfully');
+      navigate('/category');
+    } catch (err) {
+      toast.error(err.response?.data?.message);
     } finally {
       setsubmiting(false);
     }
   };
+
+  useEffect(() => {
+    function generateColorFromAscii(str) {
+      let color = '#';
+      const combination = str
+        .split('')
+        .map((char) => char.charCodeAt(0))
+        .reduce((acc, value) => acc + value, 0);
+      color += (combination * 12345).toString(16).slice(0, 6);
+      return color;
+    }
+
+    if (user && user.name) {
+      const name = user.name.toLowerCase().charAt(0);
+      const generatedColor = generateColorFromAscii(name);
+      setColor(generatedColor);
+    }
+  }, [user.name]);
 
   return (
     <>
@@ -118,36 +167,44 @@ export default function CategoryUpdate() {
                     className="form-control file-control"
                     id="clientImage"
                     name="image_url"
-                    // onChange={handleChange}
+                    onChange={handleChange}
                   />
                   <div className="form-text">Upload image size 300x300!</div>
 
                   <div className="mt-2">
-                    {/* {imagePreview ? (
-            <img
-              src={imagePreview}
-              alt="image"
-              className="img-thumbnail w-100px me-2"
-            />
-          ) : ( */}
-                    <img
-                      src="https://res.cloudinary.com/dmhxjhsrl/image/upload/v1698911473/r5jajgkngwnzr6hzj7vn.jpg"
-                      alt="image"
-                      className="img-thumbnail creatForm me-2"
-                    />
-                    {/* )} */}
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="image"
+                        className="img-thumbnail creatForm me-2"
+                      />
+                    ) : user.image_url ? (
+                      <img
+                        src={user.image_url}
+                        alt="image"
+                        className="img-thumbnail creatForm me-2"
+                      />
+                    ) : (
+                      <div className="avtarImage">
+                        <AvatarImage
+                          id="cateEditImgAvatar creatForm"
+                          name={user.name}
+                          bgColor={color}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className="col-md-12">
                 <div className="form-group">
-                  <label className="form-label fw-semibold">First Name</label>
+                  <label className="form-label fw-semibold">Name</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="firstName"
-                    value={user.firstName}
+                    name="name"
+                    value={user.name}
                     onChange={handleChange}
                     required={true}
                   />
@@ -156,28 +213,13 @@ export default function CategoryUpdate() {
 
               <div className="col-md-12">
                 <div className="form-group">
-                  <label className="form-label fw-semibold">Last Name</label>
-                  <input
-                    type="text"
+                  <label className="form-label fw-semibold">Description</label>
+                  <textarea
                     className="form-control"
-                    name="lastName"
-                    value={user.lastName}
+                    name="description"
+                    value={user.description}
                     onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label className="form-label fw-semibold">Email</label>
-                  <input
-                    type="text"
-                    className="form-control cursor"
-                    name="email"
-                    value={user.email}
-                    onChange={handleChange}
-                    required={true}
-                    disabled={true}
+                    rows="6"
                   />
                 </div>
               </div>
@@ -188,7 +230,6 @@ export default function CategoryUpdate() {
                   <Select
                     className={`form-control ${user.status ? 'active' : ''}`}
                     value={user.status}
-                    multiple
                     onChange={handleChange}
                     inputProps={{
                       name: 'status',

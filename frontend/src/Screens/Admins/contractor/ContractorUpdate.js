@@ -6,10 +6,11 @@ import { MenuItem, Select } from '@mui/material';
 import FormSubmitLoader from '../../../Util/formSubmitLoader';
 import Validations from '../../../Components/Validations';
 import { toast } from 'react-toastify';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ThreeLoader from '../../../Util/threeLoader';
 
 export default function ContractorUpdate() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { state } = useContext(Store);
   const { userInfo } = state;
@@ -20,9 +21,11 @@ export default function ContractorUpdate() {
     firstName: '',
     lastName: '',
     email: '',
+    image_url: '',
     status: true,
-    role: 'admin',
+    role: 'contractor',
   });
+  const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,7 +37,7 @@ export default function ContractorUpdate() {
           lastName: data.last_name,
           email: data.email,
           status: data.userStatus,
-          role: 'contractor',
+          image_url: data.profile_picture,
         });
       } catch (error) {
         setError(error.response?.data?.message || 'An error occurred');
@@ -46,30 +49,57 @@ export default function ContractorUpdate() {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === 'image_url') {
+      const image_url = files[0].size / 1024 / 1024;
+      if (image_url > 2) {
+        toast.error(
+          'The photo size greater than 2 MB. Make sure less than 2 MB.',
+          {
+            style: {
+              border: '1px solid #ff0033',
+              padding: '16px',
+              color: '#ff0033',
+            },
+            iconTheme: {
+              primary: '#ff0033',
+              secondary: '#FFFAEE',
+            },
+          }
+        );
+        e.target.value = null;
+        return;
+      }
+      setUser((prevState) => ({
+        ...prevState,
+        image_url: files[0],
+      }));
+      setImagePreview(window.URL.createObjectURL(files[0]));
+    } else {
+      setUser((prevState) => ({ ...prevState, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setsubmiting(true);
-    const submitData = {
-      first_name: user.firstName,
-      last_name: user.lastName,
-      email: user.email,
-      role: user.role,
-      userStatus: user.status,
-    };
-    console.log('submitData', submitData);
+    const formDatas = new FormData();
+
+    formDatas.append('file', user.image_url);
+    formDatas.append('first_name', user.firstName);
+    formDatas.append('last_name', user.lastName);
+    formDatas.append('email', user.email);
+    formDatas.append('role', user.role);
+    formDatas.append('userStatus', user.status);
+
     try {
-      const response = await axios.put(`/api/user/update/${id}`, submitData, {
+      const response = await axios.put(`/api/user/update/${id}`, formDatas, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       });
       if (response.status === 200) {
-        toast.success('Admin Updated Successfully !');
+        toast.success('client Updated Successfully !');
+        navigate('/contractor');
       }
     } catch (error) {
       toast.error(error.data?.message);
@@ -118,24 +148,24 @@ export default function ContractorUpdate() {
                     className="form-control file-control"
                     id="clientImage"
                     name="image_url"
-                    // onChange={handleChange}
+                    onChange={handleChange}
                   />
                   <div className="form-text">Upload image size 300x300!</div>
 
                   <div className="mt-2">
-                    {/* {imagePreview ? (
-            <img
-              src={imagePreview}
-              alt="image"
-              className="img-thumbnail w-100px me-2"
-            />
-          ) : ( */}
-                    <img
-                      src="https://res.cloudinary.com/dmhxjhsrl/image/upload/v1698911473/r5jajgkngwnzr6hzj7vn.jpg"
-                      alt="image"
-                      className="img-thumbnail creatForm me-2"
-                    />
-                    {/* )} */}
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="image"
+                        className="img-thumbnail w-100px me-2"
+                      />
+                    ) : (
+                      <img
+                        src="https://res.cloudinary.com/dmhxjhsrl/image/upload/v1698911473/r5jajgkngwnzr6hzj7vn.jpg"
+                        alt="image"
+                        className="img-thumbnail creatForm me-2"
+                      />
+                    )}
                   </div>
                 </div>
               </div>

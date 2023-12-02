@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Store } from '../Store';
 
 export default function Footer() {
-  return <div className="footer">© RoonBerg 2023</div>;
+  const { state } = useContext(Store);
+  const { toggleState } = state;
+  const theme = toggleState ? 'dark' : 'light';
+  return <div className={`${theme}-footer`}>© RoonBerg 2023</div>;
 }

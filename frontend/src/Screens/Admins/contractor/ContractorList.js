@@ -99,6 +99,8 @@ export default function ContractorList() {
     } catch (error) {
       console.error(error);
       toast.error('An Error Occurred While Deleting Admin.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -106,9 +108,7 @@ export default function ContractorList() {
     <>
       {loading ? (
         <>
-          <div className="ThreeDot">
-            <ThreeLoader />
-          </div>
+          <ThreeLoader />
         </>
       ) : error ? (
         <div>{error}</div>
@@ -126,12 +126,8 @@ export default function ContractorList() {
               </Link>
             </li>
           </ul>
+          {isDeleting && <FormSubmitLoader />}
           <div className="overlayLoading">
-            {isDeleting && (
-              <div className="overlayLoadingItem1">
-                <FormSubmitLoader />
-              </div>
-            )}
             <Box sx={{ width: '100%', height: '400px' }}>
               <DataGrid
                 className={

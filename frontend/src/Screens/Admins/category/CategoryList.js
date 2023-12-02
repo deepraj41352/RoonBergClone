@@ -10,6 +10,8 @@ import AvatarImage from '../../../Components/Avatar';
 import { ColorRing } from 'react-loader-spinner';
 import { ThreeDots } from 'react-loader-spinner';
 import { confirmAlert } from 'react-confirm-alert';
+import FormSubmitLoader from '../../../Util/formSubmitLoader';
+import ThreeLoader from '../../../Util/threeLoader';
 
 const columns = [
   {
@@ -72,7 +74,7 @@ export default function CategoryList() {
   const [error, setError] = useState('');
 
   const handleEdit = (rowId) => {
-    navigate(`/adminEditCategory/${rowId}`);
+    navigate(`/category/${rowId}`);
   };
 
   const { state } = useContext(Store);
@@ -130,8 +132,6 @@ export default function CategoryList() {
 
   const deleteHandle = async (userid) => {
     setIsDeleting(true);
-
-    setIsDeleting(true);
     try {
       const response = await axios.delete(`/api/category/${userid}`, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -155,19 +155,7 @@ export default function CategoryList() {
     <>
       {loading ? (
         <>
-          <div className="ThreeDot">
-            <ThreeDots
-              height="80"
-              width="80"
-              radius="9"
-              className="ThreeDot justi`fy-content-center"
-              color="#0e0e3d"
-              ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
-              wrapperClassName=""
-              visible={true}
-            />
-          </div>
+          <ThreeLoader />
         </>
       ) : error ? (
         <div>{error}</div>
@@ -185,21 +173,8 @@ export default function CategoryList() {
               </Link>
             </li>
           </ul>
+          {isDeleting && <FormSubmitLoader />}
           <div className="overlayLoading">
-            {isDeleting && (
-              <div className="overlayLoadingItem1">
-                <ColorRing
-                  visible={true}
-                  height="40"
-                  width="40"
-                  ariaLabel="blocks-loading"
-                  wrapperStyle={{}}
-                  wrapperClass="blocks-wrapper"
-                  const
-                  colors={['white', 'white', 'white', 'white', 'white']}
-                />
-              </div>
-            )}
             <Box sx={{ width: '100%', height: '400px' }}>
               <DataGrid
                 className={

@@ -27,8 +27,8 @@ export default function AgentUpdate() {
     firstName: '',
     lastName: '',
     email: '',
-    status: true,
     image_url: '',
+    status: true,
     role: 'agent',
     selectcategories: [],
   });
@@ -50,6 +50,39 @@ export default function AgentUpdate() {
     };
     FatchCategory();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === 'image_url') {
+      const image_url = files[0].size / 1024 / 1024;
+      if (image_url > 2) {
+        toast.error(
+          'The photo size greater than 2 MB. Make sure less than 2 MB.',
+          {
+            style: {
+              border: '1px solid #ff0033',
+              padding: '16px',
+              color: '#ff0033',
+            },
+            iconTheme: {
+              primary: '#ff0033',
+              secondary: '#FFFAEE',
+            },
+          }
+        );
+        e.target.value = null;
+        return;
+      }
+      setUser((prevState) => ({
+        ...prevState,
+        image_url: files[0],
+      }));
+      setImagePreview(window.URL.createObjectURL(files[0]));
+    } else {
+      setUser((prevState) => ({ ...prevState, [name]: value }));
+    }
+  };
 
   useEffect(() => {
     const FatchAgentData = async () => {
@@ -90,38 +123,6 @@ export default function AgentUpdate() {
     fetchUserData();
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (name === 'image_url') {
-      const image_url = files[0].size / 1024 / 1024;
-      if (image_url > 2) {
-        toast.error(
-          'The photo size greater than 2 MB. Make sure less than 2 MB.',
-          {
-            style: {
-              border: '1px solid #ff0033',
-              padding: '16px',
-              color: '#ff0033',
-            },
-            iconTheme: {
-              primary: '#ff0033',
-              secondary: '#FFFAEE',
-            },
-          }
-        );
-        e.target.value = null;
-        return;
-      }
-      setUser((prevState) => ({
-        ...prevState,
-        image_url: files[0],
-      }));
-      setImagePreview(window.URL.createObjectURL(files[0]));
-    } else {
-      setUser((prevState) => ({ ...prevState, [name]: value }));
-    }
-  };
   useEffect(() => {
     const filteredCategory = () => {
       const assignedCategories = agentData.flatMap(
@@ -219,7 +220,7 @@ export default function AgentUpdate() {
                     className="form-control file-control"
                     id="clientImage"
                     name="image_url"
-                    // onChange={handleChange}
+                    onChange={handleChange}
                   />
                   <div className="form-text">Upload image size 300x300!</div>
 

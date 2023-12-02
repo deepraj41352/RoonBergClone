@@ -29,7 +29,7 @@ function Theme() {
           type="checkbox"
           id="flexSwitchCheckDefault"
           onClick={handleToggle}
-          checked={isToggled}
+          checked={theme === 'dark' ? true : false}
         />
         <label
           className="form-check-label"

@@ -19,6 +19,7 @@ const upload = multer();
 import { storeNotification } from '../server.js';
 
 import { Socket, io } from 'socket.io-client';
+import mongoose from 'mongoose';
 const SocketUrl = process.env.SOCKETURL || 'ws://localhost:8900';
 const socket = io(SocketUrl);
 
@@ -67,21 +68,34 @@ userRouter.put(
   '/update/:id',
   isAuth,
   isAdminOrSelf,
+  upload.single('file'),
   expressAsyncHandler(async (req, res) => {
     try {
+      if (req.file) {
+        const profile_picture = await uploadDoc(req);
+        req.body.profile_picture = profile_picture;
+      }
+
       const user = await User.findById(req.params.id);
       if (user._id == req.params.id) {
         function capitalizeFirstLetter(data) {
           return data && data.charAt(0).toUpperCase() + data.slice(1);
         }
 
-        const { first_name, last_name, email, agentCategory, userStatus } =
-          req.body;
+        const {
+          first_name,
+          last_name,
+          email,
+          agentCategory,
+          userStatus,
+          profile_picture,
+        } = req.body;
         const lowerCaseEmail = email.toLowerCase();
         const updatedData = {
           first_name: capitalizeFirstLetter(first_name),
           last_name: capitalizeFirstLetter(last_name),
           email: lowerCaseEmail,
+          profile_picture,
           userStatus,
           agentCategory,
         };
@@ -567,7 +581,6 @@ userRouter.put(
   upload.single('file'),
   expressAsyncHandler(async (req, res) => {
     try {
-      console.log('req.user._id ', req.user._id);
       const userdata = await User.findById(req.user._id);
       if (userdata) {
         if (req.file) {
@@ -680,16 +693,28 @@ userRouter.post(
   '/add',
   isAuth,
   isAdminOrSelf,
+  upload.single('file'),
   expressAsyncHandler(async (req, res) => {
     try {
+      if (req.file) {
+        const profile_picture = await uploadDoc(req);
+        req.body.profile_picture = profile_picture;
+      }
+
       function capitalizeFirstLetter(data) {
         return data && data.charAt(0).toUpperCase() + data.slice(1);
       }
-      const { first_name, last_name, email, role, agentCategory, userStatus } =
-        req.body;
+      const {
+        first_name,
+        last_name,
+        email,
+        role,
+        agentCategory,
+        userStatus,
+        profile_picture,
+      } = req.body;
       const lowerCaseEmail = email.toLowerCase();
-      console.log(lowerCaseEmail);
-
+      console.log('agentCategory', agentCategory);
       const existingUser = await User.findOne({ email: lowerCaseEmail });
       if (existingUser) {
         return res
@@ -698,26 +723,26 @@ userRouter.post(
       }
       if (role === 'agent') {
         if (agentCategory == '' || agentCategory == null) {
-          return res.status(400).send({ message: 'wrong category provided' });
+          return res.status(400).send({ message: 'Wrong Category Provided' });
         }
       }
       const hashedPassword = await bcrypt.hash('RoonBerg@123', 8);
+
       const data = {
         first_name: capitalizeFirstLetter(first_name),
         last_name: capitalizeFirstLetter(last_name),
         email: lowerCaseEmail,
         password: hashedPassword,
         role: capitalizeFirstLetter(role),
+        profile_picture,
         agentCategory,
         userStatus,
         isConfirmed: true,
-        // Only assign the category field if the role is "agent"
         ...(role === 'agent' ? { agentCategory } : {}),
       };
       const newUser = new User(data);
       const userinfo = await newUser.save();
       const user = await User.findOne({ email: lowerCaseEmail });
-
       if (user) {
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
           expiresIn: '3d',
@@ -734,21 +759,10 @@ userRouter.post(
           resetLink: resetLink,
           first_name: user.first_name,
         };
-
-        // Send the email
-        const checkMail = await sendEmailNotify(options);
-
-        // if (checkMail) {
-        //   res.send({
-        //     message: `We sent a reset password link to your email.`,
-        //   });
-        // } else {
-        //   res.status(404).send({ message: 'Email sending failed' });
-        // }
+        await sendEmailNotify(options);
       } else {
         res.status(404).send({ message: 'User not found' });
       }
-
       const { password, ...other } = userinfo._doc;
       res.status(200).send({ message: 'User created successfully', other });
     } catch (error) {

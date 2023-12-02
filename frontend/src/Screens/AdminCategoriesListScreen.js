@@ -27,6 +27,9 @@ import { ImCross } from 'react-icons/im';
 import { ColorRing } from 'react-loader-spinner';
 import Badge from '@mui/material/Badge';
 import { ThreeDots } from 'react-loader-spinner';
+import { styled } from '@mui/material/styles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -57,9 +60,55 @@ const reducer = (state, action) => {
   }
 };
 
+const AntTabs = styled(Tabs)({
+  borderBottom: '1px solid #e8e8e8',
+  '& .MuiTabs-indicator': {
+    backgroundColor: '#052c65',
+  },
+});
+
+const AntTab = styled((props) => <Tab disableRipple {...props} />)(
+  ({ theme }) => ({
+    textTransform: 'none',
+    minWidth: 0,
+    [theme.breakpoints.up('sm')]: {
+      minWidth: 0,
+    },
+    fontWeight: theme.typography.fontWeightRegular,
+    marginRight: theme.spacing(1),
+    color: 'rgba(0, 0, 0, 0.85)',
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    '&:hover': {
+      color: '#052c65',
+      fontWeight: 'bold',
+      opacity: 1,
+    },
+    '&.Mui-selected': {
+      color: '#052c65',
+      fontWeight: theme.typography.fontWeightMedium,
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: '#d1eaff',
+    },
+  })
+);
+
 const columns = [
   {
     width: 100,
+    className: 'boldHeader',
+
     renderCell: (params) => {
       function generateColorFromAscii(str) {
         let color = '#';
@@ -89,13 +138,20 @@ const columns = [
     field: 'categoryName',
     headerName: 'Category',
     width: 100,
+    className: 'boldHeader',
   },
   {
     field: 'categoryDescription',
     headerName: 'Description',
     width: 150,
+    headerClassName: 'bold-header',
   },
-  { field: '_id', headerName: 'ID', width: 250 },
+  {
+    field: '_id',
+    headerName: 'ID',
+    width: 250,
+    headerClassName: 'bold-header',
+  },
 ];
 
 const getRowId = (row) => row._id;
@@ -132,13 +188,18 @@ export default function AdminContractorListScreen() {
     isSubmiting: false,
     submitting: false,
   });
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    console.log('newValue', newValue);
+    if (newValue == 1) {
+      navigate('/admin');
+    }
+  };
 
   const handleEdit = (rowId) => {
     navigate(`/adminEditCategory/${rowId}`);
-
-    // setSelectedRowData(params);
-    // setIsModelOpen(true);
-    // setIsNewCategory(false);
   };
 
   const handleCloseRow = () => {
@@ -295,15 +356,18 @@ export default function AdminContractorListScreen() {
         <div>{error}</div>
       ) : (
         <>
-          <Button
-            variant="outlined"
-            className=" m-2 d-flex globalbtnColor"
-            onClick={handleNew}
-            disabled={isDeleting}
-          >
-            <BiPlusMedical className="mx-2" />
-            Add Category
-          </Button>
+          <Box sx={{ width: '100%' }}>
+            <Box sx={{ bgcolor: '#fff' }}>
+              <AntTabs
+                value={value}
+                onChange={handleChange}
+                aria-label="ant example"
+              >
+                <AntTab label="Category" />
+                <AntTab label="Create" />
+              </AntTabs>
+            </Box>
+          </Box>
           <div className="overlayLoading">
             {isDeleting && (
               <div className="overlayLoadingItem1">
@@ -319,14 +383,13 @@ export default function AdminContractorListScreen() {
                 />
               </div>
             )}
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ width: '100%' }}>
               <DataGrid
                 className={
                   theme == 'light'
-                    ? `${theme}DataGrid mx-2`
-                    : `tableBg ${theme}DataGrid mx-2`
+                    ? `${theme}DataGrid mx-2 tableContainer`
+                    : `tableContainer ${theme}DataGrid mx-2`
                 }
-                // rows={categoryData ? categoryData : noRows}
                 rows={categoryData}
                 columns={[
                   ...columns,
@@ -355,20 +418,20 @@ export default function AdminContractorListScreen() {
                     renderCell: (params) => {
                       return (
                         <Grid item xs={8}>
-                          <Button
+                          <button
                             variant="contained"
-                            className="mx-2 tableEditbtn"
+                            className="mx-2 edit-btn"
                             onClick={() => handleEdit(params.row._id)}
                           >
                             Edit
-                          </Button>
-                          <Button
+                          </button>
+                          <button
                             variant="outlined"
-                            className="mx-2 tableDeletebtn"
+                            className="mx-2 delete-btn global-font"
                             onClick={() => deleteHandle(params.row._id)}
                           >
                             Delete
-                          </Button>
+                          </button>
                         </Grid>
                       );
                     },
@@ -383,11 +446,8 @@ export default function AdminContractorListScreen() {
                   },
                 }}
                 pageSizeOptions={[5]}
-                // checkboxSelection
                 disableRowSelectionOnClick
-                // gridOptions={gridOptions}
                 localeText={{ noRowsLabel: 'Category Data Is Not Avalible' }}
-                // getRowClassName={(params) => (params.row.categoryStatus === 'Inactive' ? 'inactive-row' : '')}
               />
             </Box>
           </div>

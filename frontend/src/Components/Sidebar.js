@@ -163,7 +163,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
 
         {userInfo.role == 'superadmin' ? (
           <Link
-            to="/adminList-screen"
+            to="/admin"
             className="text-decoration-none"
             onClick={handlSmallScreeneClick}
           >
@@ -182,7 +182,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
         {userInfo.role === 'admin' || userInfo.role === 'superadmin' ? (
           <>
             <Link
-              to="/adminAgentList"
+              to="/agent"
               className="text-decoration-none"
               onClick={handlSmallScreeneClick}
             >
@@ -196,23 +196,8 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
                 Agent
               </li>
             </Link>
-            {/* <Link
-              to="/adminContractorList"
-              className="text-decoration-none"
-              onClick={handlSmallScreeneClick}
-            >
-              <li
-                className={selectedItem === 'contractorList' ? 'selected' : ''}
-                onClick={() => {
-                  setSelectedItem('contractorList');
-                }}
-              >
-                <MdGroup className="me-3 fs-5" />
-                Contractor
-              </li>
-            </Link> */}
             <Link
-              to="/adminContractorList"
+              to="/contractor"
               className="text-decoration-none"
               onClick={handlSmallScreeneClick}
             >
@@ -227,7 +212,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               </li>
             </Link>
             <Link
-              to="/adminCategoriesList"
+              to="/category"
               className="text-decoration-none"
               onClick={handlSmallScreeneClick}
             >

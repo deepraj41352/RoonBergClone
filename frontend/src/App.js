@@ -58,7 +58,7 @@ import AgentEditProject from './Agent/AgentEditProjectScreen';
 import SuperadminEditAdmin from './Screens/SuperadminEditAdmin';
 import NotificationScreen from './Screens/NotificationScreen';
 import AdminListScreen from './Screens/AdminListScreen';
-import SuperadminAdminList from './Screens/SuperadminAdminList';
+import SuperadminAdminList from './Screens/SuperadminAdminList2';
 import MyComponent from './Components/MyComponent';
 import Footer from './Components/footer';
 import ConfirmRegistration from './Screens/ConfirmRegistration';
@@ -66,6 +66,20 @@ import TasksScreen from './Screens/TasksScreen';
 import TaskAddButton from './Components/TaskAddButton';
 import ContractorTaskScreen from './Screens/ContractorTaskScreen';
 import AgentTaskScreen from './Agent/AgentTaskScreen';
+
+// NewFiles
+import AdminList from './Screens/Admins/admin/AdminList';
+import AdminCreate from './Screens/Admins/admin/AdminCreate';
+import AdminUpdate from './Screens/Admins/admin/AdminUpdate';
+import AgentCreate from './Screens/Admins/agent/AgentCreate';
+import AgentUpdate from './Screens/Admins/agent/AgentUpdate';
+import AgentList from './Screens/Admins/agent/AgentList';
+import ContractorList from './Screens/Admins/contractor/ContractorList';
+import ContractorCreate from './Screens/Admins/contractor/ContractorCreate';
+import ContractorUpdate from './Screens/Admins/contractor/ContractorUpdate';
+import CategoryCreate from './Screens/Admins/category/CategoryCreate';
+import CategoryList from './Screens/Admins/category/CategoryList';
+import CategoryUpdate from './Screens/Admins/category/CategoryUpdate';
 
 function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -229,7 +243,7 @@ function App() {
                 </Navbar>
               )}
               <main className={userInfo ? `windowCal` : `windowCal1`}>
-                <div className={userInfo ? `my-4 mx-3` : `m-0 mx-3`}>
+                <div className={userInfo ? `py-5 px-4` : `m-0 mx-3`}>
                   <Routes>
                     <Route
                       path="/"
@@ -244,7 +258,6 @@ function App() {
                       path="/registration"
                       element={<RegistrationForm />}
                     />
-
                     <Route
                       path="/ForgetPassword"
                       element={<ForgetPassword />}
@@ -263,6 +276,104 @@ function App() {
                       element={<SuperadminEditAdmin />}
                     /> */}
 
+                    {/* New Routes Create */}
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute>
+                          <AdminList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/create"
+                      element={
+                        <ProtectedRoute>
+                          <AdminCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/:id"
+                      element={
+                        <ProtectedRoute>
+                          <AdminUpdate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/agent"
+                      element={
+                        <ProtectedRoute>
+                          <AgentList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/agent/create"
+                      element={
+                        <ProtectedRoute>
+                          <AgentCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/agent/:id"
+                      element={
+                        <ProtectedRoute>
+                          <AgentUpdate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/contractor"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/contractor/create"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/contractor/:id"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorUpdate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/category"
+                      element={
+                        <ProtectedRoute>
+                          <CategoryList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/category/create"
+                      element={
+                        <ProtectedRoute>
+                          <CategoryCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/category/:id"
+                      element={
+                        <ProtectedRoute>
+                          <CategoryUpdate />
+                        </ProtectedRoute>
+                      }
+                    />
+                    {/* ........} */}
                     <Route
                       path="/dashboard"
                       element={
@@ -295,7 +406,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/adminAgentList/"
                       element={
@@ -336,7 +446,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/adminContractorList"
                       element={
@@ -349,7 +458,6 @@ function App() {
                       path="/searchScreen"
                       element={<SearchScreen searchFor={searchValue} />}
                     />
-
                     <Route
                       path="/projectSingleScreen/:id"
                       element={
@@ -366,7 +474,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/chatWindowScreen/:id"
                       element={
@@ -375,7 +482,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/adminEditCategory/:id"
                       element={
@@ -384,7 +490,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/adminEditAgent/:id"
                       element={
@@ -393,7 +498,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/adminEditContractor/:id"
                       element={
@@ -402,7 +506,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/superadmineditadmin/:id"
                       element={
@@ -411,7 +514,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/AdminAssignAgent/:id"
                       element={
@@ -429,7 +531,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/contractorEditProject/:id"
                       element={
@@ -455,7 +556,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-
                     <Route
                       path="/notificationScreen"
                       element={

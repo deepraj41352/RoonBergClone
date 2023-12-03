@@ -14,7 +14,6 @@ import SignUpForm from './Screens/SignInScreen';
 import RegistrationForm from './Screens/RegistrationScreen';
 import AdminProjectListScreen from './Screens/AdminProjectListScreen';
 import SearchScreen from './Screens/SearchScreen';
-import ProjectSingleScreen from './Screens/ProjectSingleScreen';
 import ChatWindowScreen from './Screens/ChatWindowScreen';
 import { useContext, useState, useEffect } from 'react';
 import { Container, Image, Nav, Dropdown, Navbar } from 'react-bootstrap';
@@ -37,11 +36,8 @@ import ProfileScreen from './Screens/ProfileScreen';
 import Theme from './Components/Theme';
 import ProjectNotification from './Screens/ProjectNotification';
 import AddProject from './Screens/AddProject';
-import AdminEditProject from './Screens/AdminEditProjectScreen';
 import ContractorProject from './Contractor/ContractorProjectListScreen';
-import ContractorEditProject from './Contractor/ContractorEditProjectScreen';
 import AgentProjectList from './Agent/AgentProjectListScreen';
-import AgentEditProject from './Agent/AgentEditProjectScreen';
 import NotificationScreen from './Screens/NotificationScreen';
 import MyComponent from './Components/MyComponent';
 import Footer from './Components/footer';
@@ -484,22 +480,7 @@ function App() {
                       path="/searchScreen"
                       element={<SearchScreen searchFor={searchValue} />}
                     />
-                    <Route
-                      path="/projectSingleScreen/:id"
-                      element={
-                        <ProtectedRoute>
-                          <ProjectSingleScreen />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/adminEditProject/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AdminEditProject />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     <Route
                       path="/chatWindowScreen/:id"
                       element={
@@ -518,28 +499,13 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
-                      path="/contractorEditProject/:id"
-                      element={
-                        <ProtectedRoute>
-                          <ContractorEditProject />
-                        </ProtectedRoute>
-                      }
-                    />
+
                     {/* agent */}
                     <Route
                       path="/agentProjectList"
                       element={
                         <ProtectedRoute>
                           <AgentProjectList />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/agentEditProject/:id"
-                      element={
-                        <ProtectedRoute>
-                          <AgentEditProject />
                         </ProtectedRoute>
                       }
                     />

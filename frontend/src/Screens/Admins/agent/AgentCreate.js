@@ -279,9 +279,8 @@ export default function AgentCreate() {
                 <div className="form-group">
                   <label className="form-label fw-semibold">Categories</label>
                   <Select
-                    className={`form-control ${
-                      user.selectcategories ? 'active' : ''
-                    }`}
+                    className={`form-control ${user.selectcategories ? 'active' : ''
+                      }`}
                     required
                     multiple
                     value={user.selectcategories}

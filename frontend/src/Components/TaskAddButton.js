@@ -58,6 +58,8 @@ export default function TaskAddButton() {
   const [ShowErrorMessage, setShowErrorMessage] = useState(false);
   const navigate = useNavigate();
   const [selectedContractor, setSelectedContractor] = useState('');
+  const [agentData, setAgentData] = useState([]);
+  const [filterCategory, setFilterCategory] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -109,10 +111,40 @@ export default function TaskAddButton() {
       try {
         const { data } = await axios.post(`/api/user/`, { role: 'contractor' });
         setContractorData(data);
-      } catch (error) {}
+      } catch (error) { }
     };
     FatchContractorData();
   }, [isModelOpen]);
+
+  // {Get Agent User}
+  useEffect(() => {
+    const FatchContractorData = async () => {
+      try {
+        const { data } = await axios.post(`/api/user/`, { role: 'agent' });
+        setAgentData(data);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    FatchContractorData();
+  }, []);
+
+
+  // filteried category
+  useEffect(() => {
+    const fetchData = () => {
+      const filteredCategory = agentData.flatMap((agentCate) => agentCate.agentCategory);
+
+      const matchWithCateData = filteredCategory.map((AgentsCateId) =>
+        categoryData.find((cat) => cat._id === AgentsCateId)
+      );
+      const Category = matchWithCateData ? matchWithCateData : null
+      const finalCategory = Category.filter(Boolean)
+      setFilterCategory(finalCategory)
+    };
+
+    fetchData();
+  }, [agentData, categoryData]);
 
   const handleAdminSubmit = async () => {
     setIsSubmiting(true);
@@ -338,7 +370,7 @@ export default function TaskAddButton() {
             <div className="cateContainer mb-3">
               <p className="cateItem">Categories</p>
               <div className="d-flex flex-wrap cateborder ">
-                {categoryData.map((category) => (
+                {filterCategory.map((category) => (
                   <div key={category._id} className="cateItems">
                     <Form.Check
                       className="d-flex align-items-center gap-2"
@@ -383,7 +415,7 @@ export default function TaskAddButton() {
               <Select
                 value={SelectProjectName}
                 onChange={(e) => selectedProjectContractor(e)}
-                // required
+              // required
               >
                 <MenuItem
                   disabled={dynamicfield}

@@ -233,7 +233,7 @@ export default function TasksCreate() {
                 <>
                     <ul className="nav-style1">
                         <li>
-                            <Link to="tasks">
+                            <Link to="/tasks">
                                 <a>Tasks</a>
                             </Link>
                         </li>

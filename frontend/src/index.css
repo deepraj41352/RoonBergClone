@@ -184,8 +184,10 @@ code {
   font-weight: 600;
 }
 .formcrossbtn {
-  float: right !important;
   cursor: pointer !important;
+  right: 8px;
+  top: 8px;
+  position: absolute;
 }
 
 .textArea {

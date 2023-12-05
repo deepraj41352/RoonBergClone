@@ -70,6 +70,7 @@ import ContractorTasksList from './Screens/Contractors/task/Task';
 import ContractorTasksCreate from './Screens/Contractors/task/TaskCreate';
 import ContractorProjectList from './Screens/Contractors/project/Project';
 import AgentsProjectList from './Screens/Agents/project/Project';
+import ProjectList from './Screens/Admins/project/ProjectList';
 
 function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -507,11 +508,13 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+
+                    {/* change */}
                     <Route
-                      path="/adminProjectList"
+                      path="/admin/Project"
                       element={
                         <ProtectedRoute>
-                          <AdminProjectListScreen />
+                          <ProjectList />
                         </ProtectedRoute>
                       }
                     />

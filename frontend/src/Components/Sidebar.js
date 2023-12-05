@@ -293,7 +293,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/adminProjectList"
+                to="/admin/Project"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >

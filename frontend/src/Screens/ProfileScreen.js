@@ -347,6 +347,7 @@ function ProfileScreen() {
                           <Col className="editImgChild">
                             <div className="mb-3">
                               <input
+                                accept=".jpg, .jpeg, .png"
                                 type="file"
                                 onChange={handleFileChange}
                                 style={{ display: 'none' }}

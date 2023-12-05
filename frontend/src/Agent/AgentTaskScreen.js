@@ -182,12 +182,12 @@ export default function AgentTaskScreen() {
               {params.row.taskStatus === 'waiting'
                 ? 'Waiting On You'
                 : params.row.taskStatus === 'active'
-                ? 'In Progress'
-                : params.row.taskStatus === 'completed'
-                ? 'Completed'
-                : params.row.taskStatus === 'pending'
-                ? 'Ready To Completed'
-                : ''}
+                  ? 'In Progress'
+                  : params.row.taskStatus === 'completed'
+                    ? 'Completed'
+                    : params.row.taskStatus === 'pending'
+                      ? 'Ready To Completed'
+                      : ''}
             </div>
           </Grid>
         );
@@ -302,7 +302,7 @@ export default function AgentTaskScreen() {
       try {
         const { data } = await axios.post(`/api/user/`, { role: 'contractor' });
         setContractorData(data);
-      } catch (error) {}
+      } catch (error) { }
     };
 
     FatchContractorData();
@@ -593,7 +593,7 @@ export default function AgentTaskScreen() {
                         </Button>
                         <Button
                           className=" btn-color"
-                          // onClick={}
+                        // onClick={}
                         >
                           <span class="position-relative">Assigned Agent</span>
                         </Button>
@@ -895,7 +895,7 @@ export default function AgentTaskScreen() {
                         </Button>
                         <Button
                           className=" btn-color"
-                          // onClick={}
+                        // onClick={}
                         >
                           <span class="position-relative">Assigned Agent</span>
                         </Button>
@@ -948,7 +948,7 @@ export default function AgentTaskScreen() {
                         </Button>
                         <Button
                           className=" btn-color"
-                          // onClick={}
+                        // onClick={}
                         >
                           <span class="position-relative">Assigned Agent</span>
                         </Button>

@@ -1,11 +1,11 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-import { Store } from '../Store';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import ThreeLoader from '../Util/threeLoader';
+import { Store } from '../../../Store';
+import ThreeLoader from '../../../Util/threeLoader';
 
 export default function ProjectList() {
   const navigate = useNavigate();

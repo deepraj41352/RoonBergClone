@@ -342,7 +342,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/project-list-screen"
+                to="/contractor/project"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >
@@ -379,7 +379,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/contractor-tasksScreen"
+                to="/contractor/tasks"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >
@@ -406,7 +406,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/agentProjectList"
+                to="/agent/project"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >
@@ -428,7 +428,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/taskScreen-agent"
+                to="/agent/tasks"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >

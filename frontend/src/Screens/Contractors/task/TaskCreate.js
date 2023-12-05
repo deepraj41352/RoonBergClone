@@ -11,7 +11,7 @@ import truncateText from '../../../TruncateText';
 import { MdAddCircleOutline } from 'react-icons/md';
 import ThreeLoader from '../../../Util/threeLoader';
 
-export default function TasksCreate() {
+export default function ContractorTasksCreate() {
     const navigate = useNavigate();
     const { state } = useContext(Store);
     const { userInfo } = state;
@@ -21,17 +21,13 @@ export default function TasksCreate() {
     const [taskName, setTaskName] = useState('');
     const [taskDesc, setTaskDesc] = useState('');
     const [category, setCategory] = useState('');
-    const [contractorName, setContractorName] = useState('');
     const [categoryData, setCategoryData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModelOpen, setIsModelOpen] = useState(false);
     const [dynamicfield, setDynamicfield] = useState(false);
     const [ProjectData, setProjectData] = useState([]);
     const [ShowErrorMessage, setShowErrorMessage] = useState(false);
-    const [contractorData, setContractorData] = useState([]);
     const [filterCategory, setFilterCategory] = useState([]);
-
-    const [selectedContractor, setSelectedContractor] = useState('');
     const [agentData, setAgentData] = useState([]);
     const [error, setError] = useState('')
     // {Get Project .........
@@ -59,17 +55,6 @@ export default function TasksCreate() {
             }
         };
         FatchProject();
-    }, [isModelOpen]);
-
-    // {Get  Contractor User.........
-    useEffect(() => {
-        const FatchContractorData = async () => {
-            try {
-                const { data } = await axios.post(`/api/user/`, { role: 'contractor' });
-                setContractorData(data);
-            } catch (error) { }
-        };
-        FatchContractorData();
     }, [isModelOpen]);
 
     // Get Category
@@ -135,24 +120,7 @@ export default function TasksCreate() {
         }
     };
 
-    const selectedProjectContractor = (e) => {
-        const selectedProject = e.target.value;
-        setSelectProjectName(selectedProject);
-        const findProject = ProjectData.find(
-            (project) => project.projectName === selectedProject
-        );
-        if (findProject) {
-            const contractor = contractorData.filter(
-                (contractor) => contractor._id === findProject.userId
-            );
-            if (contractor) {
-                const contractorId = contractor ? contractor[0]._id : 'not avaliable';
-                setSelectedContractor(contractor);
-            } else {
-                console.log('Contractor not found for the selected project');
-            }
-        }
-    };
+
 
     // filteried category
     useEffect(() => {
@@ -176,19 +144,16 @@ export default function TasksCreate() {
         e.preventDefault();
         setsubmiting(true);
         try {
-            console.log('submitData', SelectProjectName, projectName, contractorName, selectedContractor, taskName, taskDesc, category);
+            console.log('submitData', SelectProjectName, projectName, taskName, taskDesc, category);
             const data = await axios.post(
-                `/api/task/admin`, {
+                `/api/task/contractor`, {
                 selectProjectName: SelectProjectName,
                 projectName: projectName,
-                contractorId: contractorName || selectedContractor,
                 taskName: taskName,
                 taskDescription: taskDesc,
                 taskCategory: category,
             }, {
-                headers: {
-                    authorization: `Bearer ${userInfo.token}`,
-                },
+                headers: { Authorization: `Bearer ${userInfo.token}` },
             });
 
             if (data.status === 201) {
@@ -196,7 +161,6 @@ export default function TasksCreate() {
                 setTaskName('');
                 setTaskDesc('');
                 setCategory('');
-                setContractorName('');
                 setSelectProjectName('');
                 toast.success(data.data.message);
                 navigate('/tasksScreen');
@@ -209,7 +173,6 @@ export default function TasksCreate() {
                 setTaskName('');
                 setTaskDesc('');
                 setCategory('');
-                setContractorName('');
                 setSelectProjectName('');
             }
         } catch (error) {
@@ -219,8 +182,7 @@ export default function TasksCreate() {
         }
     };
 
-    const filteredContractors = contractorData.filter((item) => item._id === contractorName)
-    const contractorFirstName = filteredContractors.first_name
+
     return (
         <>
             {loading ? (
@@ -298,7 +260,7 @@ export default function TasksCreate() {
                                     <Select
                                         className='form-control'
                                         value={SelectProjectName}
-                                        onChange={(e) => selectedProjectContractor(e)}
+                                        onChange={(e) => setSelectProjectName(e.target.value)}
                                         required
                                     >
                                         <MenuItem disabled={dynamicfield}
@@ -371,50 +333,6 @@ export default function TasksCreate() {
                                     />
                                 </div>
                             </div>
-                            {(userInfo.role == 'superadmin' || userInfo.role == 'admin') && (
-                                <div className="col-md-12">
-                                    <div className="form-group">
-                                        <label className="form-label fw-semibold">Select Contractor</label>
-                                        {SelectProjectName && selectedContractor ? (
-                                            <Select
-                                                className={`form-control`}
-                                                value={selectedContractor}
-                                                onChange={(e) => setContractorName(e.target.value)}
-                                                disabled
-                                            >
-                                                <MenuItem value={selectedContractor}>
-                                                    {contractorFirstName}
-                                                </MenuItem>
-                                            </Select>
-                                        ) : (
-                                            <Select
-                                                className={`form-control`}
-                                                value={contractorName}
-                                                onChange={(e) => setContractorName(e.target.value)}
-                                                required
-                                            >
-
-                                                <MenuItem value="" disabled>
-                                                    Select Contractor
-                                                </MenuItem>
-                                                <MenuItem value="addNew">
-                                                    <Link to={`/adminContractorList`} className="addCont">
-                                                        <MdAddCircleOutline /> Add New Contractor
-                                                    </Link>
-                                                </MenuItem>
-                                                {contractorData.map((item) => (
-                                                    <MenuItem key={item._id} value={item._id}>
-                                                        {item.first_name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        )}
-
-                                    </div>
-                                </div>
-                            )}
-
-
                             <div className="col-12">
                                 <Button
                                     className="mt-2 formbtn globalbtnColor model-btn "

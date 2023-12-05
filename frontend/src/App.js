@@ -65,6 +65,11 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { VscColorMode } from 'react-icons/vsc';
 import TasksList from './Screens/Admins/task/TaskList';
 import TasksCreate from './Screens/Admins/task/TaskCreate';
+import AgentTasksList from './Screens/Agents/task/Task';
+import ContractorTasksList from './Screens/Contractors/task/Task';
+import ContractorTasksCreate from './Screens/Contractors/task/TaskCreate';
+import ContractorProjectList from './Screens/Contractors/project/Project';
+import AgentsProjectList from './Screens/Agents/project/Project';
 
 function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -442,6 +447,53 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <TasksCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* agent task */}
+                    <Route
+                      path="agent/project"
+                      element={
+                        <ProtectedRoute>
+                          <AgentsProjectList />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    <Route
+                      path="agent/tasks"
+                      element={
+                        <ProtectedRoute>
+                          <AgentTasksList />
+                        </ProtectedRoute>
+                      }
+                    />
+
+
+                    {/* contractor task */}
+                    <Route
+                      path="contractor/project"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorProjectList />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    <Route
+                      path="contractor/tasks"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorTasksList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="contractor/tasks-create"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorTasksCreate />
                         </ProtectedRoute>
                       }
                     />

@@ -3,7 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Grid } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { Dropdown, Form } from 'react-bootstrap';
-import { Store } from '../Store';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Button } from '@mui/material';
@@ -11,12 +10,13 @@ import { Link } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaRegClock } from 'react-icons/fa';
-import AvatarImage from '../Components/Avatar';
+import AvatarImage from '../../../Components/Avatar';
 import { CiSettings } from 'react-icons/ci';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import ThreeLoader from '../Util/threeLoader';
-import FormSubmitLoader from '../Util/formSubmitLoader';
+import { Store } from '../../../Store';
+import ThreeLoader from '../../../Util/threeLoader';
+import FormSubmitLoader from '../../../Util/formSubmitLoader';
 
 export default function TasksList() {
   const [isModelOpen, setIsModelOpen] = useState(false);

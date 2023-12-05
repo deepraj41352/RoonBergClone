@@ -142,9 +142,8 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
 
   return (
     <div
-      className={`sidebar ${theme}sidebar-theme ${
-        !sidebarVisible ? '' : 'visible'
-      } `}
+      className={`sidebar ${theme}sidebar-theme ${!sidebarVisible ? '' : 'visible'
+        } `}
     >
       <div className={`${theme}-blank-box`}></div>
       <ImCross
@@ -316,7 +315,7 @@ function Sidebar({ sidebarVisible, setSidebarVisible }) {
               }}
             >
               <Link
-                to="/tasksScreen"
+                to="/tasks"
                 className={`${theme}-text-decoration-none`}
                 onClick={handlSmallScreeneClick}
               >

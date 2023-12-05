@@ -63,6 +63,8 @@ import CategoryUpdate from './Screens/Admins/category/CategoryUpdate';
 import { IoPersonOutline } from 'react-icons/io5';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { VscColorMode } from 'react-icons/vsc';
+import TasksList from './Screens/Admins/task/TaskList';
+import TasksCreate from './Screens/Admins/task/TaskCreate';
 
 function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -424,6 +426,26 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+
+                    {/* new tasks */}
+
+                    <Route
+                      path="/tasks"
+                      element={
+                        <ProtectedRoute>
+                          <TasksList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/tasks/create"
+                      element={
+                        <ProtectedRoute>
+                          <TasksCreate />
+                        </ProtectedRoute>
+                      }
+                    />
+
                     {/* ........} */}
                     <Route
                       path="/dashboard"

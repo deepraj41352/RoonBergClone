@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@mui/icons-material": "^5.14.11",
-    "@mui/material": "^5.14.11"
+    "@mui/material": "^5.14.11",
+    "react-scripts": "^5.0.1"
   }
 }
